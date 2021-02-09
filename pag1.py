@@ -122,7 +122,7 @@ def main():
     df_clean['ds']=pd.to_datetime(df_clean['ds'])
     df_clean['ds']=df_clean['ds'].dt.date
     
-    index_start = df_clean.loc[df_clean['ds'].astype(str) == '2020-01-20']
+    index_start = df_clean.loc[df_clean['ds'].astype(str) == '2020-01-15']
     #index_start = int(index_start.index[0])
     index_start = 100
     index_finish = df_clean.loc[df_clean['ds'].astype(str) == '2020-08-20']
