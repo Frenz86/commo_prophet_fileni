@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 from fbprophet import Prophet
 from fbprophet.plot import plot_plotly
 
+
 def main():
     ### Load COMMODITY
     commodity_transl = ['Oro','Rame','Argento','Palladio','Platino','Alluminio','Zinco','Piombo','Nichel','Stagno',
@@ -14,7 +15,7 @@ def main():
     "MCX Oro Mini","MCX oro Petal","MCX Oro Petal Del","MCX Piombo","MCX Piombo Mini","MCX Nickel",
     "MCX Nickel Mini","MCX Argento","MCX Argento Micro","MCX Argento Mini","MCX Zinco","MCX Zinco Mini",
     "US Caffè C","US Cotone # 2","US Zucchero # 11","Succo d'arancia","US Cacao","London Caffè",
-    "London Cacao","London Zucchero","Legname","MCX Cardamomo","Cotone MCX","MCX Olio di Palma Crudo","MCX Cotone",
+    "London Cacao","London Zucchero","Legname","MCX Cardamomo","MCX Cotone","MCX Olio di Palma Crudo","MCX Semi Cotone",
     "Olio di menta MCX","Seme di ricino MCX",'Bovini vivi','Maiali magri','Feeder Cattle',"Olio Brent","Olio Crudo WTI",
     "London Gas Oil",'Gas naturale','Olio bollente','Emissioni di carbonio',"Benzina RBOB","Olio Brent MCX","MCX Olio Crudo WTI",
     "MCX Gas Naturale","London Grano",'Riso grezzo',"Olio di semi di soia USA","Farina di soia americana",
@@ -54,36 +55,44 @@ def main():
     # Create a dictionary from zip object
     COMMODITY = dict(zipbObj)
 
-    option0 = st.selectbox( '',('Beni Alimentari', ''))
+    option0 = st.selectbox( '',('Metalli', 'Beni Alimentari', 'Energia','Altro'))
     #st.write('You selected:', option0)
 
-    keys_to_extract_comm3 = ['Gold','Copper','Silver','Palladium','Platinum','Aluminum','Zinc','Lead','Nickel','Tin','Copper','Xetra-Gold',
+    keys_to_extract_comm1 = ['Gold','Copper','Silver','Palladium','Platinum','Aluminum','Zinc','Lead','Nickel','Tin','Copper','Xetra-Gold',
     'MCX Aluminum Mini','MCX Aluminum','MCX Copper','MCX Copper Mini','MCX Gold 1 Kg','MCX Gold Guinea','MCX Gold Mini',
     'MCX Gold Petal','MCX Gold Petal Del','MCX Lead','MCX Lead Mini','MCX Nickel','MCX Nickel Mini','MCX Silver',
     'MCX Silver Micro','MCX Silver Mini','MCX Zinc','MCX Zinc Mini',]
 
-    keys_to_extract_comm1 = ['US Coffee C','US Cotton #2','US Sugar #11','Orange Juice','US Cocoa','London Coffee','London Cocoa','London Sugar','Lumber',
-    'MCX Cardamom','MCX Cotton','MCX Crude Palm Oil','MCX Kapas','MCX Mentha Oil','MCX Castor Seed','Live Cattle','Lean Hogs','Feeder Cattle',
+    keys_to_extract_comm2 = ['US Coffee C','US Sugar #11','Orange Juice','US Cocoa','London Coffee','London Cocoa','London Sugar',
+    'MCX Cardamom','MCX Crude Palm Oil','MCX Mentha Oil','MCX Castor Seed','Live Cattle','Lean Hogs','Feeder Cattle',
     'US Soybean Meal','US Soybeans','US Wheat','US Corn','Oats','London Wheat','Rough Rice','US Soybean Oil']
 
     keys_to_extract_comm3 = ['Brent Oil','Crude Oil WTI','London Gas Oil','Natural Gas','Heating Oil','Carbon Emissions','Gasoline RBOB','MCX Brent Oil',
     'MCX Crude Oil WTI','MCX Natural Gas']
 
-    COMMODITY_1 = {key: COMMODITY[key] for key in keys_to_extract_comm1}
-    #COMMODITY_2 = {key: COMMODITY[key] for key in keys_to_extract_comm2}
-    #COMMODITY_3 = {key: COMMODITY[key] for key in keys_to_extract_comm3}
+    keys_to_extract_comm4 = ['US Cotton #2','Lumber','MCX Cotton','MCX Kapas']
+
+    # COMMODITY_1 = {key: COMMODITY[key] for key in keys_to_extract_comm1}
+    COMMODITY_2 = {key: COMMODITY[key] for key in keys_to_extract_comm2}
+    # COMMODITY_3 = {key: COMMODITY[key] for key in keys_to_extract_comm3}
+    # COMMODITY_4 = {key: COMMODITY[key] for key in keys_to_extract_comm4}
+
 
     def format_func(option0):
         return COMMODITY[option0]
 
     if option0 == 'Beni Alimentari':
-        COMMODITY = COMMODITY_1
+        COMMODITY = COMMODITY_2
     # elif option0 == 'Beni Alimentari':
-    # 	COMMODITY = COMMODITY_2
+    #     COMMODITY = COMMODITY_2
+    # elif option0 == 'Energia':
+    #     COMMODITY = COMMODITY_3
     # else:
-    # 	COMMODITY = COMMODITY_3
+    #     COMMODITY = COMMODITY_4
 
     option = st.selectbox("", options=list(COMMODITY.keys()), format_func=format_func)
+    #st.write(f"..... {option}")
+    #st.write(f"You selected option {option} tradotta {format_func(option)}")
 
     today= date.today().strftime('%d/%m/%Y')
 
@@ -123,11 +132,9 @@ def main():
     df_clean['ds']=df_clean['ds'].dt.date
     
     index_start = df_clean.loc[df_clean['ds'].astype(str) == '2020-01-15']
-    #index_start = int(index_start.index[0])
-    index_start = 100
+    index_start = int(index_start.index[0])
     index_finish = df_clean.loc[df_clean['ds'].astype(str) == '2020-08-20']
-    #index_finish = int(index_finish.index[0])
-    index_finish = 300
+    index_finish = int(index_finish.index[0])
 
     # st.write(index_start)
     # st.write(index_finish)    
@@ -156,36 +163,19 @@ def main():
         #st.dataframe(data2)
     else:
         st.write("Non è stato escluso nessun intervallo temporale")
+
+    windows0=60
+    model = Prophet()
+    model.fit(data2)
+    future = model.make_future_dataframe(periods=windows0)
+    forecast = model.predict(future)
 ##############
 
-    #odierno = round((data_reversed['Close'][0])*tasso_camb,2)
+    odierno = round((data_reversed['Close'][0])*tasso_camb,2)
     dollaro = round((data_reversed['Close'][0])*1,2)
     #st.write("### Tasso di cambio $/€ odierno  :  " +str(tasso_camb))
     st.write("### Prezzo odierno : $ "+str(dollaro))
-
-
-##################
-    st.write("#### Selezionare intervallo massimo di predizione(in giorni):")
-    windows = st.slider('', 
-                            min_value=1,
-                            max_value=180,
-                            value=60,  
-                            step=1)
-
-    model = Prophet(changepoint_prior_scale=0.5,
-                    seasonality_mode='multiplicative',
-                    changepoint_range=0.8,
-                    seasonality_prior_scale=2,
-                    #holidays_prior_scale= 1,
-                    #seasonality_mode='additive',
-                    #growth='logistic', 
-                    yearly_seasonality= 10
-                    )
-
-    model.fit(data2)
-    future = model.make_future_dataframe(periods=windows,freq = 'B')
-    forecast = model.predict(future)
-
+    
     today2 = date.today()
     trentadays = today2 + timedelta(days=30)
     week1 = today2 + timedelta(days=7)
@@ -208,12 +198,37 @@ def main():
     st.write("* #### Previsione a 14 giorni : $ "+str(fore_week2))
     st.write("* #### Previsione a 30 giorni : $ "+str(fore_month))
 
+
+
+##################
+
+    st.write("#### Selezionare intervallo massimo di predizione(in giorni):")
+    windows = st.slider('', 
+                                min_value=1,
+                                max_value=180,
+                                value=60,  
+                                step=1)
+
+    model = Prophet(changepoint_prior_scale=0.5,
+                    seasonality_mode='multiplicative',
+                    changepoint_range=0.8,
+                    seasonality_prior_scale=2,
+                    #holidays_prior_scale= 1,
+                    #seasonality_mode='additive',
+                    #growth='logistic', 
+                    yearly_seasonality= 10
+                    )
+
+    model.fit(data2)
+    future = model.make_future_dataframe(periods=windows,freq = 'B')
+    forecast = model.predict(future)
+
     st.write("### Se si preferisce, selezionare una data specifica di predizione :")
     start_date2 = st.date_input('', week2)
     start_date2 = str(start_date2)
     fore_value = forecast.loc[forecast['ds'] == start_date2,['yhat']].values
     fore_value = round(fore_value[0][0],2)
-    #fore_eur =round(fore_value*tasso_camb,2)
+    fore_eur =round(fore_value*tasso_camb,2)
     #st.write("* ### Prezzo predetto in data "+start_date2+" : $ "+str(fore_value))
     #st.write("* ### Prezzo predetto in data "+start_date2+" : € "+str(fore_eur))
 
@@ -326,5 +341,5 @@ def main():
                     xaxis_title="Intervallo temporale")
     st.plotly_chart(fig2)
 
-if __name__ == '__main__':
-	main()
+if __name__ == "__main__":
+    main()
