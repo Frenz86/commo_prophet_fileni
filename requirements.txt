@@ -1,6 +1,6 @@
 numpy
 matplotlib
-pandas
+pandas == 1.2.0
 pillow
 seaborn
 streamlit
@@ -13,10 +13,6 @@ datetime
 gspread
 markdown
 joblib
-httpstan
-convertdate
-lunarcalendar
-holidays
 pystan==2.19.1.1
 fbprophet==0.7.1
 openpyxl

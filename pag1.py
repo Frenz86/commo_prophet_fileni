@@ -55,34 +55,31 @@ def main():
     # Create a dictionary from zip object
     COMMODITY = dict(zipbObj)
 
-    option0 = st.selectbox( '',('Metalli', 'Beni Alimentari', 'Energia','Altro'))
+    #option0 = st.selectbox( '',('Metalli', 'Beni Alimentari', 'Energia','Altro'))
+    option0 = st.selectbox( '',('Beni Alimentari', ''))
     #st.write('You selected:', option0)
 
-    keys_to_extract_comm1 = ['Gold','Copper','Silver','Palladium','Platinum','Aluminum','Zinc','Lead','Nickel','Tin','Copper','Xetra-Gold',
+    keys_to_extract_comm3 = ['Gold','Copper','Silver','Palladium','Platinum','Aluminum','Zinc','Lead','Nickel','Tin','Copper','Xetra-Gold',
     'MCX Aluminum Mini','MCX Aluminum','MCX Copper','MCX Copper Mini','MCX Gold 1 Kg','MCX Gold Guinea','MCX Gold Mini',
     'MCX Gold Petal','MCX Gold Petal Del','MCX Lead','MCX Lead Mini','MCX Nickel','MCX Nickel Mini','MCX Silver',
     'MCX Silver Micro','MCX Silver Mini','MCX Zinc','MCX Zinc Mini',]
 
-    keys_to_extract_comm2 = ['US Coffee C','US Sugar #11','Orange Juice','US Cocoa','London Coffee','London Cocoa','London Sugar',
-    'MCX Cardamom','MCX Crude Palm Oil','MCX Mentha Oil','MCX Castor Seed','Live Cattle','Lean Hogs','Feeder Cattle',
+    keys_to_extract_comm1 = ['US Coffee C','US Cotton #2','US Sugar #11','Orange Juice','US Cocoa','London Coffee','London Cocoa','London Sugar','Lumber',
+    'MCX Cardamom','MCX Cotton','MCX Crude Palm Oil','MCX Kapas','MCX Mentha Oil','MCX Castor Seed','Live Cattle','Lean Hogs','Feeder Cattle',
     'US Soybean Meal','US Soybeans','US Wheat','US Corn','Oats','London Wheat','Rough Rice','US Soybean Oil']
 
     keys_to_extract_comm3 = ['Brent Oil','Crude Oil WTI','London Gas Oil','Natural Gas','Heating Oil','Carbon Emissions','Gasoline RBOB','MCX Brent Oil',
     'MCX Crude Oil WTI','MCX Natural Gas']
 
-    keys_to_extract_comm4 = ['US Cotton #2','Lumber','MCX Cotton','MCX Kapas']
-
-    # COMMODITY_1 = {key: COMMODITY[key] for key in keys_to_extract_comm1}
-    COMMODITY_2 = {key: COMMODITY[key] for key in keys_to_extract_comm2}
-    # COMMODITY_3 = {key: COMMODITY[key] for key in keys_to_extract_comm3}
-    # COMMODITY_4 = {key: COMMODITY[key] for key in keys_to_extract_comm4}
-
+    COMMODITY_1 = {key: COMMODITY[key] for key in keys_to_extract_comm1}
+    #COMMODITY_2 = {key: COMMODITY[key] for key in keys_to_extract_comm2}
+    #COMMODITY_3 = {key: COMMODITY[key] for key in keys_to_extract_comm3}
 
     def format_func(option0):
         return COMMODITY[option0]
 
     if option0 == 'Beni Alimentari':
-        COMMODITY = COMMODITY_2
+        COMMODITY = COMMODITY_1
     # elif option0 == 'Beni Alimentari':
     #     COMMODITY = COMMODITY_2
     # elif option0 == 'Energia':
